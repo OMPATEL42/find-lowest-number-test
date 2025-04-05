@@ -15,28 +15,25 @@
 
 import sys
 
-def find_lowest_number(input_file, output_file):
-    lowest = None
+input_filename = sys.argv[1]
+output_filename = sys.argv[2]
 
-    with open(input_file, 'r') as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                try:
-                    num = float(line)
-                    if (lowest is None) or (num < lowest):
-                        lowest = num
-                except ValueError:
-                    pass  # Ignore lines that aren't numbers
+number_found = False
 
-    with open(output_file, 'w') as out:
-        if lowest is None:
-            out.write("No numbers found in file\n")
+with open(input_filename, 'r') as input_file:
+    for line in input_file:
+        if number_found == False:
+            try:
+                lowest_number = float(line)
+                number_found = True
+            except ValueError:
+                break
         else:
-            out.write(f"{float(lowest)}\n")
+            if float(line) < lowest_number:
+                lowest_number = float(line)
 
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python3 find_lowest_number.py <input_file> <output_file>")
+with open(output_filename, 'w') as output_file:
+    if number_found:
+        output_file.write(str(lowest_number) + "\n")
     else:
-        find_lowest_number(sys.argv[1], sys.argv[2])
+        output_file.write("No numbers found in file\n")
